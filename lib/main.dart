@@ -2,7 +2,6 @@ import 'package:first_app/scan_page.dart';
 import 'package:flutter/material.dart';
 
 import 'scan_page.dart';
-// import 'report_page.dart';
 
 void main() {
   runApp(SampleApp());

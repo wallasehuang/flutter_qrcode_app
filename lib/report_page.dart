@@ -18,7 +18,7 @@ class _ReportPageState extends State<ReportPage> {
         Container(
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('images/background_report.jpg'),
+                    image: AssetImage('assets/images/background_report.jpg'),
                     fit: BoxFit.fill))),
         Center(
             child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -52,10 +52,10 @@ class ReportGird extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      _reportCard(img: 'images/SJ.png', title: '社群主義者', score: '50'),
-      _reportCard(img: 'images/NT.png', title: '理性主義者', score: '50'),
-      _reportCard(img: 'images/SP.png', title: '現實主義者', score: '50'),
-      _reportCard(img: 'images/NF.png', title: '理想主義者', score: '50'),
+      _reportCard(img: 'assets/images/SJ.png', title: '社群主義者', score: '50'),
+      _reportCard(img: 'assets/images/NT.png', title: '理性主義者', score: '50'),
+      _reportCard(img: 'assets/images/SP.png', title: '現實主義者', score: '50'),
+      _reportCard(img: 'assets/images/NF.png', title: '理想主義者', score: '50'),
     ];
     return Center(
       child: Column(
@@ -85,8 +85,8 @@ class ReportGird extends StatelessWidget {
                 img,
                 fit: BoxFit.fill,
               ),
-              width: 200.0,
-              height: 200.0),
+              width: 150.0,
+              height: 150.0),
           Text(title,
               textAlign: TextAlign.center,
               style: TextStyle(
