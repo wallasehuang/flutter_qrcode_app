@@ -34,7 +34,9 @@ class _ReportPageState extends State<ReportPage> {
               ReportGird(),
               Button(
                 text: "重新掃描",
-                onPress: () {},
+                onPress: () {
+                  Navigator.pop(context);
+                },
                 textColor: 0xffffffff,
                 backgroundColor: 0xffbbbbbb,
               ),
@@ -100,8 +102,4 @@ class ReportGird extends StatelessWidget {
                   color: Color(0xff000000)))
         ],
       ));
-}
-
-class ReportItem {
-  String img = '';
 }

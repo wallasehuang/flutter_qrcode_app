@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'button.dart';
+import 'report_page.dart';
 
 class ScanPage extends StatefulWidget {
   ScanPage({Key key}) : super(key: key);
@@ -35,7 +36,11 @@ class _ScanPageState extends State<ScanPage> {
           ),
           Button(
             text: "開始分析",
-            onPress: () {},
+            onPress: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return ReportPage();
+              }));
+            },
             textColor: 0xffffffff,
             backgroundColor: 0xffb6b14c,
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-// import 'scan_page.dart';
-import 'report_page.dart';
+import 'scan_page.dart';
+// import 'report_page.dart';
 
 void main() {
   runApp(SampleApp());
@@ -17,8 +17,8 @@ class SampleApp extends StatelessWidget {
       // theme: ThemeData(
       //   primarySwatch: Colors.blue,
       // ),
-      home: ReportPage(),
-      // home: ScanPage(),
+      // home: ReportPage(),
+      home: ScanPage(),
     );
   }
 }
