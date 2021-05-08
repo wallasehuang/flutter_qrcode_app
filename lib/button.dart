@@ -3,16 +3,22 @@ import 'package:flutter/material.dart';
 class Button extends StatelessWidget {
   final String text;
   final Function onPress;
+  final int textColor;
+  final int backgroundColor;
 
-  Button({this.text = 'a', this.onPress});
+  Button(
+      {this.text,
+      this.onPress,
+      this.textColor = 0xffffffff,
+      this.backgroundColor = 0xffEE7959});
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
         style: TextButton.styleFrom(
-            primary: Color(0xffffffff),
-            backgroundColor: Color(0xffEE7959),
-            padding: EdgeInsets.symmetric(horizontal: 48.0, vertical: 15.0),
+            primary: Color(textColor),
+            backgroundColor: Color(backgroundColor),
+            padding: EdgeInsets.symmetric(horizontal: 48, vertical: 15),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(72.0))),
         child: Text(text),
