@@ -30,10 +30,14 @@ class _ScanPageState extends State<ScanPage> {
           Button(
             text: "重新掃描",
             onPress: () {},
+            textColor: 0xffffffff,
+            backgroundColor: 0xffee7959,
           ),
           Button(
             text: "開始分析",
             onPress: () {},
+            textColor: 0xffffffff,
+            backgroundColor: 0xffb6b14c,
           ),
         ])));
   }
