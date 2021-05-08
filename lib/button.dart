@@ -12,7 +12,7 @@ class Button extends StatelessWidget {
         style: TextButton.styleFrom(
             primary: Color(0xffffffff),
             backgroundColor: Color(0xffEE7959),
-            padding: EdgeInsets.symmetric(horizontal: 64.0, vertical: 30.0),
+            padding: EdgeInsets.symmetric(horizontal: 48.0, vertical: 15.0),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(72.0))),
         child: Text(text),

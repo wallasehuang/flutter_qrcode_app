@@ -12,30 +12,47 @@ class ScanPage extends StatefulWidget {
 class _ScanPageState extends State<ScanPage> {
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final screenWidth = screenSize.width;
+    final screenHeight = screenSize.height;
+
     return Scaffold(
-        body: Center(
-            child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                // crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-          Text("請分別掃描二維碼",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 50, fontWeight: FontWeight.w500)),
-          Container(color: Colors.black, height: 460, width: 460),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body: Center(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              for (int i = 0; i < 10; i++) _dot(status: true),
-            ],
-          ),
-          Button(
-            text: "重新掃描",
-            onPress: () {},
-          ),
-          Button(
-            text: "開始分析",
-            onPress: () {},
-          ),
-        ])));
+              Text("請分別掃描二維碼",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500)),
+              Flexible(
+                  child: ClipRRect(
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: OverflowBox(
+                      maxHeight: screenWidth,
+                      maxWidth: screenWidth,
+                      child: Container(
+                        color: Colors.black,
+                      )),
+                ),
+              )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(10, (index) => _dot(status: true)),
+              ),
+              Button(
+                text: "重新掃描",
+                onPress: () {},
+              ),
+              Button(
+                text: "開始分析",
+                onPress: () {},
+              ),
+            ]),
+      ),
+    );
   }
 }
 
