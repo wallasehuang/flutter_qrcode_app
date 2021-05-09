@@ -1,16 +1,92 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 import 'button.dart';
 import 'report_page.dart';
+import 'dart:math' as math;
 
 class ScanPage extends StatefulWidget {
-  ScanPage({Key key}) : super(key: key);
+  final CameraDescription camera;
+
+  ScanPage(@required this.camera, {Key key}) : super(key: key);
 
   @override
   _ScanPageState createState() => _ScanPageState();
 }
 
-class _ScanPageState extends State<ScanPage> {
+class _ScanPageState extends State<ScanPage> with WidgetsBindingObserver {
+  CameraController cameraController;
+  Future<void> _cameraInitializeFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    resetCamera(widget.camera);
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    stopCameraResources();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (cameraController == null || !cameraController.value.isInitialized) {
+      return;
+    }
+    switch (state) {
+      case AppLifecycleState.paused:
+        stopCameraResources();
+        break;
+      case AppLifecycleState.resumed:
+        resetCamera(widget.camera);
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.detached:
+        break;
+    }
+  }
+
+  void resetCamera(CameraDescription cameraDescription) async {
+    if (cameraController != null) {
+      await cameraController?.dispose();
+    }
+
+    cameraController = CameraController(
+      cameraDescription,
+      ResolutionPreset.veryHigh,
+      enableAudio: false,
+      imageFormatGroup: ImageFormatGroup.jpeg,
+    );
+    cameraController.addListener(() {
+      if (mounted) setState(() {});
+      if (cameraController.value.hasError) {
+        print('Camera error ${cameraController.value.errorDescription}');
+      }
+    });
+
+    _cameraInitializeFuture = cameraController.initialize();
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void stopCameraResources() async {
+    if (cameraController == null) {
+      return;
+    }
+    await cameraController?.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -28,17 +104,44 @@ class _ScanPageState extends State<ScanPage> {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500)),
               Flexible(
-                  child: ClipRRect(
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: OverflowBox(
-                      maxHeight: screenWidth,
-                      maxWidth: screenWidth,
-                      child: Container(
-                        color: Colors.black,
-                      )),
+                child: FutureBuilder(
+                  future: _cameraInitializeFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done &&
+                        cameraController.value.isInitialized) {
+                      // camera preview params
+                      final screenH = math.max(screenHeight, screenWidth);
+                      final screenW = math.min(screenHeight, screenWidth);
+                      final tmp = cameraController.value.previewSize;
+                      final previewH = math.max(tmp.height, tmp.width);
+                      final previewW = math.min(tmp.height, tmp.width);
+                      final screenRatio = screenH / screenW;
+                      final previewRatio = previewH / previewW;
+
+                      return ClipRRect(
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: OverflowBox(
+                              maxHeight: screenRatio > previewRatio
+                                  ? screenH
+                                  : screenW / previewW * previewH,
+                              maxWidth: screenRatio > previewRatio
+                                  ? screenH / previewH * previewW
+                                  : screenW,
+                              child: CameraPreview(cameraController)),
+                        ),
+                      );
+                    } else {
+                      return AspectRatio(
+                          aspectRatio: 1,
+                          child: Container(
+                              alignment: Alignment.center,
+                              color: Colors.grey,
+                              child: CircularProgressIndicator()));
+                    }
+                  },
                 ),
-              )),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(10, (index) => _dot(status: true)),
