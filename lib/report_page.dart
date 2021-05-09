@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'button.dart';
 
-class ReportPage extends StatefulWidget {
-  ReportPage({Key key}) : super(key: key);
+class ReportPage extends StatelessWidget {
+  final List<int> list = [1, 2, 3, 4, 1, 1, 3, 1, 1, 2];
 
-  @override
-  _ReportPageState createState() => _ReportPageState();
-}
+  ReportPage();
 
-class _ReportPageState extends State<ReportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +28,7 @@ class _ReportPageState extends State<ReportPage> {
                     fontWeight: FontWeight.w500,
                     color: Color(0xffEE7959),
                   )),
-              ReportGird(),
+              ReportGird(list: list),
               Button(
                 text: "重新掃描",
                 onPress: () {
@@ -47,15 +44,28 @@ class _ReportPageState extends State<ReportPage> {
 }
 
 class ReportGird extends StatelessWidget {
-  ReportGird();
+  final List<int> list;
+  ReportGird({@required this.list});
 
   @override
   Widget build(BuildContext context) {
     final items = [
-      _reportCard(img: 'assets/images/SJ.png', title: '社群主義者', score: '50'),
-      _reportCard(img: 'assets/images/NT.png', title: '理性主義者', score: '50'),
-      _reportCard(img: 'assets/images/SP.png', title: '現實主義者', score: '50'),
-      _reportCard(img: 'assets/images/NF.png', title: '理想主義者', score: '50'),
+      _reportCard(
+          img: 'assets/images/SJ.png',
+          title: '社群主義者',
+          score: '${_filterListCount(1) * 10}'),
+      _reportCard(
+          img: 'assets/images/NT.png',
+          title: '理性主義者',
+          score: '${_filterListCount(2) * 10}'),
+      _reportCard(
+          img: 'assets/images/SP.png',
+          title: '現實主義者',
+          score: '${_filterListCount(3) * 10}'),
+      _reportCard(
+          img: 'assets/images/NF.png',
+          title: '理想主義者',
+          score: '${_filterListCount(4) * 10}'),
     ];
     return Center(
       child: Column(
@@ -102,4 +112,12 @@ class ReportGird extends StatelessWidget {
                   color: Color(0xff000000)))
         ],
       ));
+
+  int _filterListCount(int val) {
+    int count = 0;
+
+    list.forEach((item) => item == val ? count++ : 0);
+
+    return count;
+  }
 }
