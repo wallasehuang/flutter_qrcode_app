@@ -1,11 +1,12 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+
 import 'scan_page.dart';
 
 class MyApp extends StatelessWidget {
-  final CameraDescription camera;
+  // final CameraDescription camera;
 
-  const MyApp({Key key, @required this.camera}) : super(key: key);
+  // const MyApp({Key key, @required this.camera}) : super(key: key);
+  MyApp();
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,8 @@ class MyApp extends StatelessWidget {
       // theme: ThemeData(
       //   primarySwatch: Colors.blue,
       // ),
-      home: ScanPage(camera),
+      // home: ScanPage(camera),
+      home: ScanPage(),
     );
   }
 }
