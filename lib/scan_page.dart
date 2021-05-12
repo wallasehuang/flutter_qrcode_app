@@ -1,97 +1,69 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:qrcode/qrcode.dart';
 
 import 'button.dart';
 import 'report_page.dart';
-import 'dart:math' as math;
 
 class ScanPage extends StatefulWidget {
-  final CameraDescription camera;
-
-  ScanPage(@required this.camera, {Key key}) : super(key: key);
+  ScanPage({Key key}) : super(key: key);
 
   @override
   _ScanPageState createState() => _ScanPageState();
 }
 
-class _ScanPageState extends State<ScanPage> with WidgetsBindingObserver {
-  CameraController cameraController;
-  Future<void> _cameraInitializeFuture;
+class _ScanPageState extends State<ScanPage> {
+  QRCaptureController _captureController = QRCaptureController();
+  List<int> _answers = List.generate(10, (index) => 0);
+  String _qrcodeData = null;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    resetCamera(widget.camera);
-  }
-
-  @override
-  void deactivate() {
-    super.deactivate();
-    stopCameraResources();
+    _captureController.onCapture((data) {
+      _qrcodeData = data;
+    });
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    _captureController.pause();
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (cameraController == null || !cameraController.value.isInitialized) {
-      return;
-    }
-    switch (state) {
-      case AppLifecycleState.paused:
-        stopCameraResources();
-        break;
-      case AppLifecycleState.resumed:
-        resetCamera(widget.camera);
-        break;
-      case AppLifecycleState.inactive:
-      case AppLifecycleState.detached:
-        break;
+  void _onScanButtonPressed() {
+    try {
+      int index = _answers.indexWhere((element) => element == 0);
+      print(index);
+      setState(() {
+        _answers[index] = int.parse(_qrcodeData);
+      });
+    } catch (error) {
+      print(error);
+    } finally {
+      _captureController.resume();
     }
   }
 
-  void resetCamera(CameraDescription cameraDescription) async {
-    if (cameraController != null) {
-      await cameraController?.dispose();
-    }
-
-    cameraController = CameraController(
-      cameraDescription,
-      ResolutionPreset.veryHigh,
-      enableAudio: false,
-      imageFormatGroup: ImageFormatGroup.jpeg,
-    );
-    cameraController.addListener(() {
-      if (mounted) setState(() {});
-      if (cameraController.value.hasError) {
-        print('Camera error ${cameraController.value.errorDescription}');
-      }
+  void _onResetButtonPressed() {
+    setState(() {
+      // tODO: set all value = 0 in _answer list
     });
-
-    _cameraInitializeFuture = cameraController.initialize();
-
-    if (mounted) {
-      setState(() {});
-    }
+    _captureController.resume();
   }
 
-  void stopCameraResources() async {
-    if (cameraController == null) {
-      return;
-    }
-    await cameraController?.dispose();
+  void _onParseButtonPressed() {
+    _answers.forEach((element) => print(element));
+
+    // TODO
+    // Navigator.push(context, MaterialPageRoute(builder: (context) {
+    //   return ReportPage();
+    // }));
   }
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final screenWidth = screenSize.width;
-    final screenHeight = screenSize.height;
+    final qrcodeViewSize = screenSize.width * 0.6;
 
     return Scaffold(
       body: Center(
@@ -103,64 +75,33 @@ class _ScanPageState extends State<ScanPage> with WidgetsBindingObserver {
               Text("請分別掃描二維碼",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500)),
-              Flexible(
-                child: FutureBuilder(
-                  future: _cameraInitializeFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done &&
-                        cameraController.value.isInitialized) {
-                      // camera preview params
-                      final screenH = math.max(screenHeight, screenWidth);
-                      final screenW = math.min(screenHeight, screenWidth);
-                      final tmp = cameraController.value.previewSize;
-                      final previewH = math.max(tmp.height, tmp.width);
-                      final previewW = math.min(tmp.height, tmp.width);
-                      final screenRatio = screenH / screenW;
-                      final previewRatio = previewH / previewW;
-
-                      return ClipRRect(
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: OverflowBox(
-                              maxHeight: screenRatio > previewRatio
-                                  ? screenH
-                                  : screenW / previewW * previewH,
-                              maxWidth: screenRatio > previewRatio
-                                  ? screenH / previewH * previewW
-                                  : screenW,
-                              child: CameraPreview(cameraController)),
-                        ),
-                      );
-                    } else {
-                      return AspectRatio(
-                          aspectRatio: 1,
-                          child: Container(
-                              alignment: Alignment.center,
-                              color: Colors.grey,
-                              child: CircularProgressIndicator()));
-                    }
-                  },
-                ),
+              Container(
+                color: Colors.black,
+                height: qrcodeViewSize,
+                width: qrcodeViewSize,
+                child: QRCaptureView(controller: _captureController),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(10, (index) => _dot(status: true)),
+                children: _answers.map((e) => _dot(status: e > 0)).toList(),
+              ),
+              Button(
+                textColor: 0xffffffff,
+                backgroundColor: 0xffee7959,
+                text: "掃描",
+                onPress: _onScanButtonPressed,
               ),
               Button(
                 textColor: 0xffffffff,
                 backgroundColor: 0xffee7959,
                 text: "重新掃描",
-                onPress: () {},
+                onPress: _onResetButtonPressed,
               ),
               Button(
                 textColor: 0xffffffff,
                 backgroundColor: 0xffb6b14c,
                 text: "開始分析",
-                onPress: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return ReportPage();
-                  }));
-                },
+                onPress: _onParseButtonPressed,
               ),
             ]),
       ),
@@ -169,4 +110,4 @@ class _ScanPageState extends State<ScanPage> with WidgetsBindingObserver {
 }
 
 Widget _dot({@required status}) => Icon(Icons.circle,
-    color: status ? Color.fromRGBO(238, 121, 89, 1) : Colors.white);
+    color: status ? Color.fromRGBO(238, 121, 89, 1) : Colors.grey);
