@@ -66,7 +66,13 @@ class _ScanPageState extends State<ScanPage> {
     final qrcodeViewSize = screenSize.width * 0.6;
 
     return Scaffold(
-      body: Center(
+        body: Stack(children: [
+      Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/images/background_main.png'),
+                  fit: BoxFit.fill))),
+      Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -105,7 +111,7 @@ class _ScanPageState extends State<ScanPage> {
               ),
             ]),
       ),
-    );
+    ]));
   }
 }
 
