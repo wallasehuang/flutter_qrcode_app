@@ -46,7 +46,7 @@ class _ScanPageState extends State<ScanPage> {
 
   void _onResetButtonPressed() {
     setState(() {
-      // tODO: set all value = 0 in _answer list
+      _answers = _answers.map((x) => 0).toList();
     });
     _captureController.resume();
   }
@@ -55,9 +55,9 @@ class _ScanPageState extends State<ScanPage> {
     _answers.forEach((element) => print(element));
 
     // TODO
-    // Navigator.push(context, MaterialPageRoute(builder: (context) {
-    //   return ReportPage();
-    // }));
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return ReportPage(list: _answers);
+    }));
   }
 
   @override
