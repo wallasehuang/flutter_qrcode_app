@@ -51,13 +51,21 @@ class _ScanPageState extends State<ScanPage> {
     _captureController.resume();
   }
 
+  _return(dynamic value) {
+    setState(() {
+      _answers = _answers.map((x) => 0).toList();
+    });
+  }
+
   void _onParseButtonPressed() {
     _answers.forEach((element) => print(element));
 
     // TODO
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return ReportPage(list: _answers);
-    }));
+    })).then(_return);
+
+    // _onResetButtonPressed();
   }
 
   @override
@@ -91,24 +99,26 @@ class _ScanPageState extends State<ScanPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: _answers.map((e) => _dot(status: e > 0)).toList(),
               ),
-              Button(
-                textColor: 0xffffffff,
-                backgroundColor: 0xffee7959,
-                text: "掃描",
-                onPress: _onScanButtonPressed,
-              ),
+              if (_answers.contains(0))
+                Button(
+                  textColor: 0xffffffff,
+                  backgroundColor: 0xffee7959,
+                  text: "掃描",
+                  onPress: _onScanButtonPressed,
+                ),
               Button(
                 textColor: 0xffffffff,
                 backgroundColor: 0xffee7959,
                 text: "重新掃描",
                 onPress: _onResetButtonPressed,
               ),
-              Button(
-                textColor: 0xffffffff,
-                backgroundColor: 0xffb6b14c,
-                text: "開始分析",
-                onPress: _onParseButtonPressed,
-              ),
+              if (!_answers.contains(0))
+                Button(
+                  textColor: 0xffffffff,
+                  backgroundColor: 0xffb6b14c,
+                  text: "開始分析",
+                  onPress: _onParseButtonPressed,
+                ),
             ]),
       ),
     ]));
