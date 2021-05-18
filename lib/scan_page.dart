@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:qrcode/qrcode.dart';
 
 import 'button.dart';
+import 'report_page.dart';
 
 class ScanPage extends StatefulWidget {
   ScanPage({Key key}) : super(key: key);
@@ -45,10 +46,7 @@ class _ScanPageState extends State<ScanPage> {
 
   void _onResetButtonPressed() {
     setState(() {
-      setState(() {
-        _answers.map((element) => 0);
-      });
-      // tODO: set all value = 0 in _answer list
+      _answers = _answers.map((x) => 0).toList();
     });
     _captureController.resume();
   }
@@ -57,9 +55,9 @@ class _ScanPageState extends State<ScanPage> {
     _answers.forEach((element) => print(element));
 
     // TODO
-    // Navigator.push(context, MaterialPageRoute(builder: (context) {
-    //   return ReportPage();
-    // }));
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return ReportPage(list: _answers);
+    }));
   }
 
   @override

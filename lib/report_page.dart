@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'button.dart';
 
 class ReportPage extends StatelessWidget {
-  final List<int> list = [1, 2, 3, 4, 1, 1, 3, 1, 1, 2];
+  final List<int> list;
 
-  ReportPage();
+  const ReportPage({Key key, @required this.list}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +45,7 @@ class ReportPage extends StatelessWidget {
 
 class ReportGird extends StatelessWidget {
   final List<int> list;
+
   ReportGird({@required this.list});
 
   @override
