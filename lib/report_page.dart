@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'button.dart';
 
@@ -17,6 +20,12 @@ class ReportPage extends StatelessWidget {
                 image: DecorationImage(
                     image: AssetImage('assets/images/background_report.jpg'),
                     fit: BoxFit.fill))),
+        Container(
+          color: Color.fromRGBO(223, 223, 223, .5),
+          height: 462,
+          width: 462,
+          // child: QRCaptureView(controller: _captureController),
+        ),
         Center(
             child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 // crossAxisAlignment: CrossAxisAlignment.center,
@@ -24,7 +33,8 @@ class ReportPage extends StatelessWidget {
               Text("你的人格傾向",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 30,
+                    fontFamily: 'creamfont',
+                    fontSize: 60,
                     fontWeight: FontWeight.w500,
                     color: Color(0xffEE7959),
                   )),
@@ -35,7 +45,7 @@ class ReportPage extends StatelessWidget {
                   Navigator.pop(context);
                 },
                 textColor: 0xffffffff,
-                backgroundColor: 0xffbbbbbb,
+                backgroundColor: 0xffee7959,
               ),
             ])),
       ],
@@ -84,35 +94,45 @@ class ReportGird extends StatelessWidget {
 
   Widget _reportCard({String img, String title, String score}) => Container(
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(const Radius.circular(4)),
-        color: Colors.white,
-      ),
-      padding: EdgeInsets.all(8),
-      margin: EdgeInsets.all(8),
-      child: Column(
-        children: [
+          borderRadius: const BorderRadius.all(const Radius.circular(30)),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 0,
+                blurRadius: 13,
+                offset: Offset(6, 9))
+          ]),
+      padding: EdgeInsets.all(15),
+      margin: EdgeInsets.all(25),
+      child: Stack(children: [
+        if (score == _maxScore())
+          Align(
+              alignment: Alignment.topRight,
+              child: Icon(FontAwesomeIcons.crown)),
+        Column(children: [
           Container(
               child: Image.asset(
                 img,
                 fit: BoxFit.fill,
               ),
-              width: 150.0,
-              height: 150.0),
+              width: 250.0,
+              height: 250.0),
           Text(title,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 36,
                 fontWeight: FontWeight.w400,
                 color: Color(0xff000000),
               )),
           Text('$score%',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 36,
                   fontWeight: FontWeight.w400,
                   color: Color(0xff000000)))
-        ],
-      ));
+        ])
+      ]));
 
   int _filterListCount(int val) {
     int count = 0;
@@ -120,5 +140,16 @@ class ReportGird extends StatelessWidget {
     list.forEach((item) => item == val ? count++ : 0);
 
     return count;
+  }
+
+  String _maxScore() {
+    final result = [
+      _filterListCount(1),
+      _filterListCount(2),
+      _filterListCount(3),
+      _filterListCount(4)
+    ].reduce(max);
+
+    return '${result * 10}';
   }
 }

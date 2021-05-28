@@ -14,14 +14,18 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-        style: TextButton.styleFrom(
-            primary: Color(textColor),
-            backgroundColor: Color(backgroundColor),
-            padding: EdgeInsets.symmetric(horizontal: 48, vertical: 15),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(72.0))),
-        child: Text(text),
-        onPressed: onPress);
+    return Container(
+      margin: EdgeInsets.fromLTRB(0, 0, 0, 30),
+      child: TextButton(
+          style: TextButton.styleFrom(
+              minimumSize: Size(270, 100),
+              primary: Color(textColor),
+              backgroundColor: Color(backgroundColor),
+              padding: EdgeInsets.symmetric(horizontal: 60, vertical: 30),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(72.0))),
+          child: Text(text, style: TextStyle(fontSize: 36)),
+          onPressed: onPress),
+    );
   }
 }

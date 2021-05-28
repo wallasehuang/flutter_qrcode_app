@@ -88,42 +88,51 @@ class _ScanPageState extends State<ScanPage> {
             children: [
               Text("請分別掃描二維碼",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500)),
+                  style: TextStyle(fontSize: 50, fontWeight: FontWeight.w500)),
               Container(
                 color: Colors.black,
-                height: qrcodeViewSize,
-                width: qrcodeViewSize,
-                child: QRCaptureView(controller: _captureController),
+                height: 462,
+                width: 462,
+                // child: QRCaptureView(controller: _captureController),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: _answers.map((e) => _dot(status: e > 0)).toList(),
               ),
-              if (_answers.contains(0))
-                Button(
-                  textColor: 0xffffffff,
-                  backgroundColor: 0xffee7959,
-                  text: "掃描",
-                  onPress: _onScanButtonPressed,
-                ),
-              Button(
-                textColor: 0xffffffff,
-                backgroundColor: 0xffee7959,
-                text: "重新掃描",
-                onPress: _onResetButtonPressed,
-              ),
-              if (!_answers.contains(0))
-                Button(
-                  textColor: 0xffffffff,
-                  backgroundColor: 0xffb6b14c,
-                  text: "開始分析",
-                  onPress: _onParseButtonPressed,
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (_answers.contains(0))
+                    Button(
+                      textColor: 0xffffffff,
+                      backgroundColor: 0xffee7959,
+                      text: "掃描",
+                      onPress: _onScanButtonPressed,
+                    ),
+                  Button(
+                    textColor: 0xffffffff,
+                    backgroundColor: 0xffbbbbbb,
+                    text: "重新掃描",
+                    onPress: _onResetButtonPressed,
+                  ),
+                  if (!_answers.contains(0))
+                    Button(
+                      textColor: 0xffffffff,
+                      backgroundColor: 0xffb6b14c,
+                      text: "開始分析",
+                      onPress: _onParseButtonPressed,
+                    ),
+                ],
+              )
             ]),
       ),
     ]));
   }
 }
 
-Widget _dot({@required status}) => Icon(Icons.circle,
-    color: status ? Color.fromRGBO(238, 121, 89, 1) : Colors.grey);
+Widget _dot({@required status}) => Container(
+    padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+    child: Icon(Icons.circle,
+        color: status ? Color.fromRGBO(238, 121, 89, 1) : Colors.grey,
+        size: 25));
